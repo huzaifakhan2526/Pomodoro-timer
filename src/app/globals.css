@@ -24,3 +24,28 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.timer-button {
+  @apply px-4 py-2 rounded-md text-white font-medium transition-colors;
+}
+
+.timer-button-primary {
+  @apply bg-blue-600 hover:bg-blue-700;
+}
+
+.timer-button-secondary {
+  @apply bg-gray-600 hover:bg-gray-700;
+}
+
+.timer-button-danger {
+  @apply bg-red-600 hover:bg-red-700;
+}
+
+.timer-card {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all;
+}
+
+.stats-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-all;
+}
