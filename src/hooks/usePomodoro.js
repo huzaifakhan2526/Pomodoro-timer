@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect, useRef } from 'react';
 import { addSession } from '@/utils/localStorage';
 
@@ -76,7 +75,7 @@ export default function usePomodoro() {
                 clearInterval(timerRef.current);
             }
         };
-    }, [mode, isPaused, timerType]);
+    }, [mode, isPaused, timerType, durations]);
 
     const startWorkTimer = () => {
         setTimeLeft(durations[timerType].work);

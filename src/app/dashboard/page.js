@@ -54,7 +54,7 @@ export default function Dashboard() {
                     Data is automatically cleaned after 15 days to manage storage usage.
                 </p>
                 <p className="text-gray-600 dark:text-gray-300">
-                    You can manually clear all data using the "Clear All Data" button above.
+                    You can manually clear all data using the &quot;Clear All Data&quot; button above.
                 </p>
             </div>
         </div>
