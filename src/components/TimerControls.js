@@ -3,6 +3,8 @@ export default function TimerControls({
     isPaused,
     timerType,
     showConfirmation,
+    completedWorkSessions,
+    getBreakType,
     onStartWork,
     onStartBreak,
     onTogglePause,
@@ -51,7 +53,7 @@ export default function TimerControls({
                     className="timer-button bg-green-600 hover:bg-green-700 text-white"
                     disabled={isActive && !isPaused || showConfirmation}
                 >
-                    Start Break
+                    Start {getBreakType() === 'long' ? 'Long ' : ''}Break
                 </button>
             </div>
 

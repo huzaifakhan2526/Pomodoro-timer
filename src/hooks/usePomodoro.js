@@ -7,6 +7,8 @@ export default function usePomodoro() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [completedWorkSessions, setCompletedWorkSessions] = useState(0);
+    const [totalTime, setTotalTime] = useState(0);
 
     const timerRef = useRef(null);
     const audioRef = useRef(null);
@@ -15,11 +17,13 @@ export default function usePomodoro() {
     const durations = {
         short: {
             work: 25 * 60,
-            break: 5 * 60
+            break: 5 * 60,
+            longBreak: 15 * 60
         },
         long: {
             work: 50 * 60,
-            break: 10 * 60
+            break: 10 * 60,
+            longBreak: 20 * 60
         }
     };
 
@@ -57,6 +61,7 @@ export default function usePomodoro() {
                         }
 
                         if (mode === 'work') {
+                            setCompletedWorkSessions(prev => prev + 1);
                             setShowConfirmation(true);
                             setMode('completed');
                         } else if (mode === 'break') {
@@ -78,14 +83,21 @@ export default function usePomodoro() {
     }, [mode, isPaused, timerType, durations]);
 
     const startWorkTimer = () => {
-        setTimeLeft(durations[timerType].work);
+        const workDuration = durations[timerType].work;
+        setTimeLeft(workDuration);
+        setTotalTime(workDuration);
         setMode('work');
         setIsPaused(false);
         setShowConfirmation(false);
     };
 
     const startBreakTimer = () => {
-        setTimeLeft(durations[timerType].break);
+        // Determine if it's time for a long break (after 4 work sessions)
+        const isLongBreak = completedWorkSessions > 0 && completedWorkSessions % 4 === 0;
+        const breakDuration = isLongBreak ? durations[timerType].longBreak : durations[timerType].break;
+        
+        setTimeLeft(breakDuration);
+        setTotalTime(breakDuration);
         setMode('break');
         setIsPaused(false);
         setShowConfirmation(false);
@@ -99,13 +111,20 @@ export default function usePomodoro() {
         clearInterval(timerRef.current);
         setMode('idle');
         setTimeLeft(0);
+        setTotalTime(0);
         setIsPaused(false);
         setShowConfirmation(false);
+        setCompletedWorkSessions(0);
     };
 
     const changeTimerType = (type) => {
         setTimerType(type);
         resetTimer();
+    };
+
+    const getBreakType = () => {
+        if (completedWorkSessions === 0) return 'short';
+        return completedWorkSessions % 4 === 0 ? 'long' : 'short';
     };
 
     const confirmTransition = () => {
@@ -133,8 +152,11 @@ export default function usePomodoro() {
         mode,
         timerType,
         timeLeft,
+        totalTime,
         isPaused,
         showConfirmation,
+        completedWorkSessions,
+        getBreakType,
         startWorkTimer,
         startBreakTimer,
         togglePause,

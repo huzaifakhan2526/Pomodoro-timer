@@ -49,3 +49,41 @@ body {
 .stats-card {
   @apply bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-all;
 }
+
+/* Cup animation enhancements */
+@keyframes steam-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-20px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.steam-animation {
+  animation: steam-rise 2s ease-out infinite;
+}
+
+/* Focus mode background */
+.focus-mode {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.dark .focus-mode {
+  background: linear-gradient(135deg, #1f1f1f 0%, #2d1b1b 100%);
+}
+
+/* Break mode background */
+.break-mode {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.dark .break-mode {
+  background: linear-gradient(135deg, #1f1f1f 0%, #1b2d1b 100%);
+}

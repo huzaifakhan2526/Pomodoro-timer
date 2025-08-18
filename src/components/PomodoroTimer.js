@@ -9,8 +9,11 @@ export default function PomodoroTimer() {
         mode,
         timerType,
         timeLeft,
+        totalTime,
         isPaused,
         showConfirmation,
+        completedWorkSessions,
+        getBreakType,
         startWorkTimer,
         startBreakTimer,
         togglePause,
@@ -24,9 +27,12 @@ export default function PomodoroTimer() {
             <TimerDisplay
                 mode={mode}
                 timeLeft={timeLeft}
+                totalTime={totalTime}
                 isPaused={isPaused}
                 showConfirmation={showConfirmation}
                 timerType={timerType}
+                completedWorkSessions={completedWorkSessions}
+                getBreakType={getBreakType}
                 onConfirm={confirmTransition}
             />
 
@@ -35,6 +41,8 @@ export default function PomodoroTimer() {
                 isPaused={isPaused}
                 timerType={timerType}
                 showConfirmation={showConfirmation}
+                completedWorkSessions={completedWorkSessions}
+                getBreakType={getBreakType}
                 onStartWork={startWorkTimer}
                 onStartBreak={startBreakTimer}
                 onTogglePause={togglePause}
