@@ -87,3 +87,68 @@ body {
 .dark .break-mode {
   background: linear-gradient(135deg, #1f1f1f 0%, #1b2d1b 100%);
 }
+
+/* Full screen focus mode */
+.fullscreen-focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+
+/* Prevent body scroll when in full screen */
+body.fullscreen-active {
+  overflow: hidden;
+}
+
+/* Smooth transitions for full screen */
+.fullscreen-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fade in animation for full screen entry */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+/* Liquid movement animation */
+@keyframes liquid-wave {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.liquid-wave {
+  animation: liquid-wave 4s ease-in-out infinite;
+}
+
+/* Cup glow effect */
+@keyframes cup-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+  }
+}
+
+.cup-glow {
+  animation: cup-glow 3s ease-in-out infinite;
+}

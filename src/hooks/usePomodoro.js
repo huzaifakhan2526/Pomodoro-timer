@@ -9,6 +9,7 @@ export default function usePomodoro() {
     const [isPaused, setIsPaused] = useState(false);
     const [completedWorkSessions, setCompletedWorkSessions] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const timerRef = useRef(null);
     const audioRef = useRef(null);
@@ -89,6 +90,7 @@ export default function usePomodoro() {
         setMode('work');
         setIsPaused(false);
         setShowConfirmation(false);
+        setIsFullScreen(true);
     };
 
     const startBreakTimer = () => {
@@ -115,6 +117,7 @@ export default function usePomodoro() {
         setIsPaused(false);
         setShowConfirmation(false);
         setCompletedWorkSessions(0);
+        setIsFullScreen(false);
     };
 
     const changeTimerType = (type) => {
@@ -125,6 +128,10 @@ export default function usePomodoro() {
     const getBreakType = () => {
         if (completedWorkSessions === 0) return 'short';
         return completedWorkSessions % 4 === 0 ? 'long' : 'short';
+    };
+
+    const exitFullScreen = () => {
+        setIsFullScreen(false);
     };
 
     const confirmTransition = () => {
@@ -156,12 +163,14 @@ export default function usePomodoro() {
         isPaused,
         showConfirmation,
         completedWorkSessions,
+        isFullScreen,
         getBreakType,
         startWorkTimer,
         startBreakTimer,
         togglePause,
         resetTimer,
         changeTimerType,
-        confirmTransition
+        confirmTransition,
+        exitFullScreen
     };
 }

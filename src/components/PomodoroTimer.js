@@ -3,6 +3,7 @@
 import usePomodoro from '@/hooks/usePomodoro';
 import TimerDisplay from './TimerDisplay';
 import TimerControls from './TimerControls';
+import FullScreenFocus from './FullScreenFocus';
 
 export default function PomodoroTimer() {
     const {
@@ -19,36 +20,51 @@ export default function PomodoroTimer() {
         togglePause,
         resetTimer,
         changeTimerType,
-        confirmTransition
+        confirmTransition,
+        exitFullScreen
     } = usePomodoro();
 
     return (
-        <div className="max-w-md mx-auto">
-            <TimerDisplay
+        <>
+            {/* Full Screen Focus Mode */}
+            <FullScreenFocus
                 mode={mode}
                 timeLeft={timeLeft}
                 totalTime={totalTime}
                 isPaused={isPaused}
-                showConfirmation={showConfirmation}
-                timerType={timerType}
-                completedWorkSessions={completedWorkSessions}
-                getBreakType={getBreakType}
-                onConfirm={confirmTransition}
-            />
-
-            <TimerControls
-                mode={mode}
-                isPaused={isPaused}
-                timerType={timerType}
-                showConfirmation={showConfirmation}
-                completedWorkSessions={completedWorkSessions}
-                getBreakType={getBreakType}
-                onStartWork={startWorkTimer}
-                onStartBreak={startBreakTimer}
                 onTogglePause={togglePause}
                 onReset={resetTimer}
-                onChangeTimerType={changeTimerType}
+                onExit={exitFullScreen}
             />
-        </div>
+
+            {/* Regular Timer Interface */}
+            <div className="max-w-md mx-auto">
+                <TimerDisplay
+                    mode={mode}
+                    timeLeft={timeLeft}
+                    totalTime={totalTime}
+                    isPaused={isPaused}
+                    showConfirmation={showConfirmation}
+                    timerType={timerType}
+                    completedWorkSessions={completedWorkSessions}
+                    getBreakType={getBreakType}
+                    onConfirm={confirmTransition}
+                />
+
+                <TimerControls
+                    mode={mode}
+                    isPaused={isPaused}
+                    timerType={timerType}
+                    showConfirmation={showConfirmation}
+                    completedWorkSessions={completedWorkSessions}
+                    getBreakType={getBreakType}
+                    onStartWork={startWorkTimer}
+                    onStartBreak={startBreakTimer}
+                    onTogglePause={togglePause}
+                onReset={resetTimer}
+                    onChangeTimerType={changeTimerType}
+                />
+            </div>
+        </>
     );
 }

@@ -42,10 +42,13 @@ export default function TimerControls({
             <div className="flex justify-center space-x-4">
                 <button
                     onClick={onStartWork}
-                    className="timer-button timer-button-primary"
+                    className="timer-button timer-button-primary relative group"
                     disabled={isActive && !isPaused || showConfirmation}
                 >
                     Start Work
+                    <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Full Screen
+                    </div>
                 </button>
 
                 <button
