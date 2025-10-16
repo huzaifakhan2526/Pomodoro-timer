@@ -78,7 +78,7 @@ export default function PomodoroTimer() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4">
                         <h3 className="text-lg font-semibold mb-4">Change Timer Type?</h3>
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            You have an active timer running. Changing the timer type will reset your current session and you'll lose your progress. Are you sure you want to continue?
+                            You have an active timer running. Changing the timer type will reset your current session and you&apos;ll lose your progress. Are you sure you want to continue?
                         </p>
                         <div className="flex space-x-4">
                             <button

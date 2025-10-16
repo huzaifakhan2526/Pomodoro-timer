@@ -101,7 +101,7 @@ export default function usePomodoro() {
                 clearInterval(timerRef.current);
             }
         };
-    }, [mode, isPaused, timerType, durations]);
+    }, [mode, isPaused, timerType, durations, completedWorkSessions, currentTodoId]);
 
     const startWorkTimer = () => {
         const workDuration = durations[timerType].work;
