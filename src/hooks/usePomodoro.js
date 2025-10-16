@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { addSession } from '@/utils/localStorage';
+import { addTodoSession } from '@/utils/todoStorage';
 
 export default function usePomodoro() {
     const [mode, setMode] = useState('idle'); // idle, work, break, paused, completed
@@ -10,6 +11,10 @@ export default function usePomodoro() {
     const [completedWorkSessions, setCompletedWorkSessions] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [previousMode, setPreviousMode] = useState(null); // Track which mode just completed
+    const [showTimerTypeConfirm, setShowTimerTypeConfirm] = useState(false);
+    const [pendingTimerType, setPendingTimerType] = useState(null);
+    const [currentTodoId, setCurrentTodoId] = useState(null); // Track which todo is being worked on
 
     const timerRef = useRef(null);
     const audioRef = useRef(null);
@@ -45,27 +50,42 @@ export default function usePomodoro() {
         if (mode !== 'idle' && mode !== 'completed' && !isPaused) {
             timerRef.current = setInterval(() => {
                 setTimeLeft(prev => {
-                    if (prev <= 1) {
+                    if (prev <= 0) {
                         clearInterval(timerRef.current);
                         playSound(mode === 'work' ? '/sounds/work-end.mp3' : '/sounds/break-end.mp3');
 
                         // Record completed session
                         if (mode === 'work' || mode === 'break') {
+                            let sessionDuration;
+                            if (mode === 'work') {
+                                sessionDuration = durations[timerType].work;
+                                
+                                // Add Pomodoro session to current todo if one is selected
+                                if (currentTodoId) {
+                                    addTodoSession(currentTodoId);
+                                }
+                            } else {
+                                // For breaks, determine if it was long or short break
+                                const isLongBreak = completedWorkSessions > 0 && completedWorkSessions % 4 === 0;
+                                sessionDuration = isLongBreak ? durations[timerType].longBreak : durations[timerType].break;
+                            }
+                            
                             const session = {
                                 type: mode,
-                                duration: mode === 'work'
-                                    ? durations[timerType].work
-                                    : durations[timerType].break,
-                                timestamp: new Date().toISOString()
+                                duration: sessionDuration,
+                                timestamp: new Date().toISOString(),
+                                todoId: currentTodoId // Include todo ID in session data
                             };
                             addSession(session);
                         }
 
                         if (mode === 'work') {
                             setCompletedWorkSessions(prev => prev + 1);
+                            setPreviousMode('work');
                             setShowConfirmation(true);
                             setMode('completed');
                         } else if (mode === 'break') {
+                            setPreviousMode('break');
                             setShowConfirmation(true);
                             setMode('completed');
                         }
@@ -121,8 +141,30 @@ export default function usePomodoro() {
     };
 
     const changeTimerType = (type) => {
+        // If timer is active and not paused, require confirmation
+        if ((mode === 'work' || mode === 'break') && !isPaused) {
+            setPendingTimerType(type);
+            setShowTimerTypeConfirm(true);
+            return;
+        }
+        
+        // If idle or paused, allow immediate change
         setTimerType(type);
         resetTimer();
+    };
+
+    const confirmTimerTypeChange = () => {
+        if (pendingTimerType) {
+            setTimerType(pendingTimerType);
+            resetTimer();
+        }
+        setShowTimerTypeConfirm(false);
+        setPendingTimerType(null);
+    };
+
+    const cancelTimerTypeChange = () => {
+        setShowTimerTypeConfirm(false);
+        setPendingTimerType(null);
     };
 
     const getBreakType = () => {
@@ -134,15 +176,23 @@ export default function usePomodoro() {
         setIsFullScreen(false);
     };
 
+    const setCurrentTodo = (todoId) => {
+        setCurrentTodoId(todoId);
+    };
+
+    const clearCurrentTodo = () => {
+        setCurrentTodoId(null);
+    };
+
     const confirmTransition = () => {
         if (mode === 'completed') {
-            const previousMode = showConfirmation && timeLeft === 0 ? 'work' : 'break';
             if (previousMode === 'work') {
                 startBreakTimer();
             } else {
                 setMode('idle');
                 setShowConfirmation(false);
             }
+            setPreviousMode(null);
         }
     };
 
@@ -164,6 +214,9 @@ export default function usePomodoro() {
         showConfirmation,
         completedWorkSessions,
         isFullScreen,
+        showTimerTypeConfirm,
+        pendingTimerType,
+        currentTodoId,
         getBreakType,
         startWorkTimer,
         startBreakTimer,
@@ -171,6 +224,10 @@ export default function usePomodoro() {
         resetTimer,
         changeTimerType,
         confirmTransition,
+        confirmTimerTypeChange,
+        cancelTimerTypeChange,
+        setCurrentTodo,
+        clearCurrentTodo,
         exitFullScreen
     };
 }

@@ -1,15 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-// Mock formatTime function for demo
-const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-};
+import { formatTime } from '@/utils/formatTime';
 
 export default function FullScreenFocus({
+    isFullScreen = false,
     mode = 'work',
     timeLeft = 1500, // 25 minutes for demo
     totalTime = 1500,
@@ -99,19 +94,15 @@ export default function FullScreenFocus({
 
     const handleExitConfirm = () => {
         setShowExitConfirm(false);
-        // For demo purposes, hide the component by changing mode
-        // In real app, this would be handled by parent component
+        // Exit full screen mode - parent component handles state
         onExit();
-
-        // Force component to unmount by changing mode
-        window.location.reload();
     };
 
     const handleExitCancel = () => {
         setShowExitConfirm(false);
     };
 
-    if (mode !== 'work') return null;
+    if (!isFullScreen || mode !== 'work') return null;
 
     const progress = totalTime > 0 ? timeLeft / totalTime : 0;
     const isLowTime = progress < 0.1;
@@ -127,8 +118,22 @@ export default function FullScreenFocus({
                     style={{ animationDelay: '4s', animationDuration: '12s' }} />
             </div>
 
-            {/* Main content area - only cup animation */}
-            <div className="flex items-center justify-center px-4">
+            {/* Main content area - cup animation and timer */}
+            <div className="flex flex-col items-center justify-center px-4">
+                {/* Timer Display */}
+                <div className="mb-8 text-center">
+                    <div className="text-8xl sm:text-9xl lg:text-[12rem] font-bold text-white mb-4 drop-shadow-2xl">
+                        {formatTime(timeLeft)}
+                    </div>
+                    <div className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 font-medium">
+                        {mode === 'work' ? 'FOCUS TIME' : 'BREAK TIME'}
+                    </div>
+                    {isPaused && (
+                        <div className="text-yellow-400 text-xl sm:text-2xl font-bold mt-4 animate-pulse">
+                            PAUSED
+                        </div>
+                    )}
+                </div>
 
                 {/* Cup Animation - responsive sizing */}
                 <div className="relative w-40 h-48 sm:w-56 sm:h-68 lg:w-72 lg:h-80 xl:w-80 xl:h-96">

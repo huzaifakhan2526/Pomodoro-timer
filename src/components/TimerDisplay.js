@@ -15,9 +15,9 @@ export default function TimerDisplay({
     const getDisplayText = () => {
         if (showConfirmation) {
             if (mode === 'completed' && timeLeft === 0) {
-                // Determine if this was a work or break session
-                const wasWorkSession = completedWorkSessions > 0 && completedWorkSessions % 4 === 0;
-                if (wasWorkSession) {
+                // Check if we just completed a work session (completedWorkSessions was just incremented)
+                const isWorkSessionComplete = completedWorkSessions > 0 && (completedWorkSessions - 1) % 4 === 0;
+                if (isWorkSessionComplete) {
                     return 'Work session complete! Take a long break.';
                 }
                 return 'Work session complete! Take a short break.';
